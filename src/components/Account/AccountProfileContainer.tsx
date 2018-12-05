@@ -3,11 +3,13 @@ import promisify = require("es6-promisify");
 import * as ethUtil from 'ethereumjs-util';
 import * as sigUtil from 'eth-sig-util';
 import { Formik, Field, FormikBag } from 'formik';
+import * as OAuth from 'oauthio-web';
 import * as queryString from 'query-string';
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
 import TwitterLogin from 'components/Account/TwitterLogin';
+import GitHubLogin from 'react-github-login';
 
 import * as profileActions from "actions/profilesActions";
 import { IRootState } from "reducers";
@@ -143,10 +145,45 @@ class AccountProfileContainer extends React.Component<IProps, IState> {
 
   public onSuccess(e: any) : any {
     console.log("Success ", e);
+    e.preventDefault();
   }
 
   public onFailed(e: any) : any {
     console.log("Failure ", e);
+    e.preventDefault();
+  }
+
+  // Downloads oauth.js from CDN, pretty much like adding external scripts
+  public componentDidMount () {
+    const oauthScript = document.createElement("script");
+    oauthScript.src = "https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js";
+
+    document.body.appendChild(oauthScript);
+  }
+
+  public githubLogin(e: any) : any {
+    console.log("github login ", e);
+    // Prevents page reload
+    e.preventDefault();
+
+    (window as any).OAuth.initialize('o-LrtT4vWMn-8O5yM-wsiMJxukY');
+
+     // Popup Github and ask for authorization
+    (window as any).OAuth.popup('github').then((provider: any) => {
+
+      // Prompts 'welcome' message with User's name on successful login
+      // Check console logs for additional User info
+      provider.me().then((data: any) => {
+        console.log("data: ", data);
+        alert("Welcome " + data.name + "!");
+      });
+
+      // You can also call Github's API using .get()
+      provider.get('/user').then((data: any) => {
+         console.log('self data:', data);
+      });
+
+    });
   }
 
   public render() {
@@ -258,6 +295,11 @@ class AccountProfileContainer extends React.Component<IProps, IState> {
                       requestTokenUrl="http://localhost:3001/link/twitter/"
                       credentials='include'
                       customHeaders={{'Accept': 'application/json', 'Cache': 'no-cache'}} />
+                     <GitHubLogin clientId="00643d97ed6ba7208db5"
+                        onSuccess={this.onSuccess}
+                        onFailure={this.onFailed}
+                        redirectUri="http://localhost:3001/link/github/callback" />
+                     <button onClick={this.githubLogin}>Github Login</button>
                     {/*<div>
                       <strong>Prove it's you by linking your social accounts:</strong>
                       <p>Authenticate your identity by linking your social accounts. Once linked, your social accounts will display in your profile page, and server as proof that you are who you say you are.</p>

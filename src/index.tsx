@@ -45,16 +45,11 @@ async function renderApp() {
     //Arc.LoggingService.logLevel = Arc.LogLevel.all;
 
     // Silence 240 sec error
-    Arc.ContractWrappers.AbsoluteVote.contract.constructor.synchronization_timeout = 0;
     Arc.ContractWrappers.ContributionReward.contract.constructor.synchronization_timeout = 0;
     Arc.ContractWrappers.DaoCreator.contract.constructor.synchronization_timeout = 0;
     Arc.ContractWrappers.GenesisProtocol.contract.constructor.synchronization_timeout = 0;
-    Arc.ContractWrappers.GlobalConstraintRegistrar.contract.constructor.synchronization_timeout = 0;
+    //Arc.ContractWrappers.GlobalConstraintRegistrar.contract.constructor.synchronization_timeout = 0;
     Arc.ContractWrappers.SchemeRegistrar.contract.constructor.synchronization_timeout = 0;
-    Arc.ContractWrappers.TokenCapGC.contract.constructor.synchronization_timeout = 0;
-    Arc.ContractWrappers.UpgradeScheme.contract.constructor.synchronization_timeout = 0;
-    Arc.ContractWrappers.VestingScheme.contract.constructor.synchronization_timeout = 0;
-    Arc.ContractWrappers.VoteInOrganizationScheme.contract.constructor.synchronization_timeout = 0;
 
     Arc.AccountService.subscribeToAccountChanges(() => {
       window.location.reload()
