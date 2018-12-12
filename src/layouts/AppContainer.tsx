@@ -89,7 +89,7 @@ interface IState {
 }
 
 class AppContainer extends React.Component<IProps, IState> {
-  public watchers: Array<Arc.EventFetcher<any> | Arc.EntityFetcher<any, any>> = []
+  public watchers: Array<Arc.EventFetcher<any> | Arc.EntityFetcher<any, any>> = [];
 
   constructor(props: IProps) {
     super(props);
@@ -231,7 +231,7 @@ class AppContainer extends React.Component<IProps, IState> {
  public componentWillUnmount() {
     this.watchers.forEach((watch) => {
       watch.stopWatching();
-    })
+    });
   }
 
   public render() {

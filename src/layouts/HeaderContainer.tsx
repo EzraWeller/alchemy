@@ -12,7 +12,7 @@ import * as uiActions from "actions/uiActions";
 import * as web3Actions from "actions/web3Actions";
 import { IRootState } from "reducers";
 import { IAccountState, IDaoState, newAccount } from "reducers/arcReducer";
-import { showNotification, NotificationStatus } from 'reducers/notifications'
+import { showNotification, NotificationStatus } from 'reducers/notifications';
 import { IProfilesState, IProfileState } from "reducers/profilesReducer";
 import { IWeb3State } from "reducers/web3Reducer";
 import Util from "lib/util";
@@ -60,7 +60,7 @@ interface IDispatchProps {
   setCurrentAccount: typeof web3Actions.setCurrentAccount;
   onApprovedStakingGens: typeof web3Actions.onApprovedStakingGens;
   onEthBalanceChanged: typeof web3Actions.onEthBalanceChanged;
-  onExternalTokenBalanceChanged: typeof web3Actions.onExternalTokenBalanceChanged
+  onExternalTokenBalanceChanged: typeof web3Actions.onExternalTokenBalanceChanged;
   onGenBalanceChanged: typeof web3Actions.onGenBalanceChanged;
   onGenStakingAllowanceChanged: typeof web3Actions.onGenStakingAllowanceChanged;
   showNotification: typeof showNotification;

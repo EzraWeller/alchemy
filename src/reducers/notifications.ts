@@ -26,19 +26,19 @@ export interface INotification {
   timestamp: number;
 }
 
-export type INotificationsState = INotification[]
+export type INotificationsState = INotification[];
 
 /** -- Actions -- */
 
 export interface IDismissNotification extends Action {
-  type: 'Notifications/Dismiss',
+  type: 'Notifications/Dismiss';
   payload: {
     id: string;
-  }
+  };
 }
 
 export interface IShowNotification extends Action {
-  type: 'Notifications/Show',
+  type: 'Notifications/Show';
   payload: {
     id: string;
     status: NotificationStatus;
@@ -47,12 +47,12 @@ export interface IShowNotification extends Action {
     fullErrorMessage?: string;
     url?: string;
     timestamp: number;
-  }
+  };
 }
 
 const filterUndefined = (obj: any): any => {
   return JSON.parse(JSON.stringify(obj));
-}
+};
 
 export const showNotification =
   (
@@ -85,7 +85,7 @@ export const dismissNotification = (id: string) => (dispatch: Dispatch<any>) =>
     }
   } as IDismissNotification);
 
-export type NotificationsAction = IDismissNotification | IShowNotification
+export type NotificationsAction = IDismissNotification | IShowNotification;
 
 export const isNotificationsAction = (action: Action): action is NotificationsAction =>
   typeof action.type === 'string' && action.type.startsWith('Notifications/');
@@ -112,7 +112,7 @@ export const notificationsReducer =
               message: '',
               ...action.payload
             }
-          ]
+          ];
         } else {
           return state.map((n) =>
             n.id !== id ? n : {
@@ -120,13 +120,13 @@ export const notificationsReducer =
               ...n,
               ...action.payload
             }
-          )
+          );
         }
       }
     }
 
     return state;
-  }
+  };
 
 /** -- Effects -- */
 
@@ -147,8 +147,8 @@ export const successDismisser =
             payload: {
               id: action.payload.id
             }
-          } as IDismissNotification)
-        }, timeout)
+          } as IDismissNotification);
+        }, timeout);
       }
     }
 
@@ -181,7 +181,7 @@ const messages: {[key: string]: (proposalTitle: string | undefined, options: any
     `Creating a new DAO`,
   'StandardToken.approve': (proposalTitle, {amount}: Arc.StandardTokenApproveOptions) =>
     `Approving ${Util.fromWei(new BigNumber(amount))} GEN for staking`
-}
+};
 
 /**
  * Effect for automatically showing and updating notifications based on transaction updates.
@@ -230,8 +230,8 @@ export const notificationUpdater: Middleware =
         txHash && `https://${network !== 'live' ? `${network}.` : ''}etherscan.io/tx/${txHash}`,
         id,
         +moment()
-      )(dispatch)
-    }
+      )(dispatch);
+    };
 
     return (action: any) => {
 
@@ -248,13 +248,13 @@ export const notificationUpdater: Middleware =
               if (operations[id].status === OperationStatus.Sent || operations[id].error) {
                 transaction2Notification(network, id, operations[id]);
               }
-            })
+            });
           }
         }
 
         if (isOperationsAction(action) && action.type === 'Operations/Update') {
           const {payload: {id, operation}} = action as IUpdateOperation;
-          transaction2Notification(network, id, operation)
+          transaction2Notification(network, id, operation);
         }
 
         // also dismiss the corrosponding operation if it exists.
@@ -262,8 +262,8 @@ export const notificationUpdater: Middleware =
           const {payload: {id}} = action as IDismissNotification;
           dismissOperation(action.payload.id)(dispatch);
         }
-      })()
+      })();
 
       return next(action);
-    }
-  }
+    };
+  };

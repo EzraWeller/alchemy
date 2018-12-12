@@ -82,7 +82,7 @@ export function newAccount(
     stakes: [],
     tokens,
     votes: []
-  }
+  };
 }
 
 export interface IDaoState {
@@ -206,7 +206,7 @@ export const emptyProposal: IProposalState = {
   votesYes: 0,
   votesNo: 0,
   winningVote: VoteOptions.No,
-}
+};
 
 export interface IStakeState {
   avatarAddress: string;
@@ -225,14 +225,14 @@ export interface IVoteState {
 }
 
 export interface IArcState {
-  accounts: { [accountKey: string]: IAccountState },
+  accounts: { [accountKey: string]: IAccountState };
   daosLoaded: boolean;
-  daos: { [avatarAddress: string]: IDaoState },
+  daos: { [avatarAddress: string]: IDaoState };
   lastBlock: string | number; // The most recent block read into the state
-  proposals: { [proposalId: string]: IProposalState },
-  redemptions: { [redemptionKey: string]: IRedemptionState },
-  stakes: { [stakeKey: string]: IStakeState },
-  votes: { [voteKey: string]: IVoteState }
+  proposals: { [proposalId: string]: IProposalState };
+  redemptions: { [redemptionKey: string]: IRedemptionState };
+  stakes: { [stakeKey: string]: IStakeState };
+  votes: { [voteKey: string]: IVoteState };
 }
 
 export const initialState: IArcState = {
@@ -251,7 +251,7 @@ export const closingTime = (proposal: IProposalState) => {
   const start = boostedTime ? boostedTime : submittedTime;
   const duration = boostedTime ? boostedVotePeriodLimit : preBoostedVotePeriodLimit;
   return moment((executionTime || start + duration) * 1000);
-}
+};
 
 export function checkProposalExpired(proposal: IProposalState): ProposalStates {
   if ((proposal.state == ProposalStates.Boosted || proposal.state == ProposalStates.QuietEndingPeriod)
@@ -597,14 +597,14 @@ const arcReducer = (state = initialState, action: any) => {
                 stakerBountyTokens: {$set: 0}
               } :
               {}
-          )
+          );
 
       // Set redeemed rewards to zero
       state = update(state, {
         redemptions: {
           [redemptionKey]: updateObj
         }
-      })
+      });
 
       // Remove if there are no more redemptions
       if (!anyRedemptions(state.redemptions[redemptionKey])) {
@@ -696,7 +696,7 @@ const arcReducer = (state = initialState, action: any) => {
             ethCount: { $set: balance || state.daos[avatarAddress].ethCount}
           }
         }
-      })
+      });
     }
 
     case ActionTypes.ARC_ON_DAO_EXTERNAL_TOKEN_BALANCE_CHANGE: {
@@ -708,7 +708,7 @@ const arcReducer = (state = initialState, action: any) => {
             externalTokenCount: { $set: balance || state.daos[avatarAddress].externalTokenCount}
           }
         }
-      })
+      });
     }
 
     case ActionTypes.ARC_ON_DAO_GEN_BALANCE_CHANGE: {
@@ -720,7 +720,7 @@ const arcReducer = (state = initialState, action: any) => {
             genCount: { $set: balance || state.daos[avatarAddress].genCount}
           }
         }
-      })
+      });
     }
   }
 

@@ -56,7 +56,7 @@ export const createHistoryProposalsSelector = () => createSelector(
       proposal.state === ProposalStates.PreBoostedTimedOut
     ));
 
-    result.sort((a, b) => closingTime(b).unix() - closingTime(a).unix())
+    result.sort((a, b) => closingTime(b).unix() - closingTime(a).unix());
     return result;
   }
 );

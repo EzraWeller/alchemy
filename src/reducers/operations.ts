@@ -39,21 +39,21 @@ export interface IOperationsState {
 /** -- Actions -- */
 
 export interface IUpdateOperation extends Action {
-  type: 'Operations/Update',
+  type: 'Operations/Update';
   payload: {
     id: string;
     operation: IOperation;
-  }
+  };
 }
 
 export interface IDismissOperation extends Action {
-  type: 'Operations/Dismiss',
+  type: 'Operations/Dismiss';
   payload: {
     id: string;
-  }
+  };
 }
 
-type OperationsAction = IUpdateOperation | IDismissOperation
+type OperationsAction = IUpdateOperation | IDismissOperation;
 
 export const isOperationsAction = (action: Action): action is OperationsAction =>
   typeof action.type === 'string' && action.type.startsWith('Operations/');
@@ -90,7 +90,7 @@ export const operationsReducer =
     }
 
     return state;
-  }
+  };
 
 /** -- Effects -- */
 
@@ -105,7 +105,7 @@ const errorType = (error: Error) => {
   } else {
     return error.message;
   }
-}
+};
 
 export const operationsTracker: Middleware =
   ({ getState, dispatch }) =>
@@ -152,7 +152,7 @@ export const operationsTracker: Middleware =
             proposalTitle
           }
         }
-      } as IUpdateOperation)
+      } as IUpdateOperation);
     });
 
     return (a: any) => {
@@ -164,7 +164,7 @@ export const operationsTracker: Middleware =
         const payload = action.payload;
 
         if (payload) {
-          const state = payload.operations as IOperationsState
+          const state = payload.operations as IOperationsState;
           Object.keys(state).forEach(async (id: string) => {
             if (state[id].status && state[id].status === OperationStatus.Sent && !state[id].error) {
               try {
@@ -179,7 +179,7 @@ export const operationsTracker: Middleware =
                   }
                 } as IUpdateOperation);
               } catch (e) {
-                console.error(e)
+                console.error(e);
                 dispatch({
                   type: 'Operations/Update',
                   payload: {
@@ -188,14 +188,14 @@ export const operationsTracker: Middleware =
                       error: errorType(e)
                     }
                   }
-                } as IUpdateOperation)
+                } as IUpdateOperation);
               }
             }
           });
         }
       }
 
-      next(a)
+      next(a);
     };
   }
 ;

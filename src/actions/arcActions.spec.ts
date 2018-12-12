@@ -2,7 +2,7 @@ import { getDAOs, createDAO, CreateDAOAction, createProposal, CreateProposalActi
 import { Dispatch } from "react-redux";
 import { IRootState } from "reducers";
 import * as Arc from "@daostack/arc.js";
-import { ActionTypes } from "reducers/arcReducer"
+import { ActionTypes } from "reducers/arcReducer";
 import { mockStore } from "../configureStore";
 import axios from "axios";
 import MockAdapter from 'axios-mock-adapter';
@@ -24,12 +24,12 @@ describe('arcActions', () => {
     mockAxios = new MockAdapter(axios);
     // TODO: proper mocking of the server
     mockAxios.onAny(/.*/i).reply(200, {data: 42});
-  })
+  });
 
   let dispatch: any;
   beforeEach(() => {
     dispatch = jest.fn(store.dispatch);
-  })
+  });
 
   let daoAddress: string;
   it('createDAO', async () => {
@@ -63,7 +63,7 @@ describe('arcActions', () => {
         //   // Fails:
         //   // totalSteps: actions.length
         // }
-      })
+      });
     }
 
     if (last.sequence === AsyncActionSequence.Success) {
@@ -74,7 +74,7 @@ describe('arcActions', () => {
         payload: {entities: {
           daos: {}
         }}
-      } as CreateDAOAction)
+      } as CreateDAOAction);
       const daos = last.payload.entities.daos;
       const daoAddresses = Object.keys(daos);
       expect(daoAddresses.length).toEqual(1);
@@ -100,7 +100,7 @@ describe('arcActions', () => {
         tokenAddress: daoInstance.token.address,
       });
 
-      return
+      return;
       // TODO: evaluate if it is worth the trouble to get the rest of this test to work
       // Verify proper members shape
       expect(dao.members)
@@ -112,14 +112,14 @@ describe('arcActions', () => {
       // Verify that there was a location change
       const locationChanges = calls.filter((a: any) => a.type === CALL_HISTORY_METHOD);
       expect(locationChanges.length).toEqual(1);
-      expect(locationChanges[0]).toMatchObject(push(`/dao/${daoAddress}`))
+      expect(locationChanges[0]).toMatchObject(push(`/dao/${daoAddress}`));
 
     } else {
       // Verify last action is a failure with proper payload
       expect(last).toMatchObject({
         type: ActionTypes.ARC_CREATE_DAO,
         sequence: AsyncActionSequence.Failure
-      } as CreateDAOAction)
+      } as CreateDAOAction);
     }
   });
 
@@ -157,7 +157,7 @@ describe('arcActions', () => {
         // operation: {
         //   totalSteps: actions.length
         // }
-      })
+      });
     }
 
     if (!last || last.sequence === AsyncActionSequence.Pending) {
@@ -168,20 +168,20 @@ describe('arcActions', () => {
           // operation: {
           //   totalSteps: actions.length + 1
           // }
-        })
+        });
       }
 
       // Verify that there was a location change
       const locationChanges = calls.filter((a: any) => a.type === CALL_HISTORY_METHOD);
       expect(locationChanges.length).toEqual(1);
-      expect(locationChanges[0]).toMatchObject(push(`/dao/${daoAddress}`))
+      expect(locationChanges[0]).toMatchObject(push(`/dao/${daoAddress}`));
 
     } else {
       // Verify last action is a failure with proper payload
       expect(last).toMatchObject({
         type: ActionTypes.ARC_CREATE_PROPOSAL,
         sequence: AsyncActionSequence.Failure
-      } as CreateProposalAction)
+      } as CreateProposalAction);
     }
-  })
-})
+  });
+});

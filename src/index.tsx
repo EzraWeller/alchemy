@@ -45,7 +45,7 @@ async function renderApp() {
       } catch (e) {
         return defaultGasPrice;
       }
-    })
+    });
 
     //Arc.LoggingService.logLevel = Arc.LogLevel.all;
 
@@ -57,7 +57,7 @@ async function renderApp() {
     Arc.ContractWrappers.SchemeRegistrar.contract.constructor.synchronization_timeout = 0;
 
     Arc.AccountService.subscribeToAccountChanges(() => {
-      window.location.reload()
+      window.location.reload();
     });
   } catch (e) {
     console.error(e);

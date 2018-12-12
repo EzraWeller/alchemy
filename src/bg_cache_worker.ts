@@ -124,7 +124,7 @@ async function updateCache() {
     console.log("Pulling current cached state for " + arcjsNetwork + " from S3 bucket " + process.env.S3_BUCKET);
     try {
       const s3Get = promisify(s3.getObject.bind(s3));
-      const resp = await s3Get({Bucket: process.env.S3_BUCKET || 'daostack-alchemy', Key: s3FileName})
+      const resp = await s3Get({Bucket: process.env.S3_BUCKET || 'daostack-alchemy', Key: s3FileName});
       initialState = JSON.parse(resp.Body.toString('utf-8'));
       await store.dispatch({ type: ActionTypes.ARC_LOAD_CACHED_STATE, sequence: AsyncActionSequence.Success, payload: initialState });
     } catch (e) {
@@ -193,43 +193,43 @@ async function updateCache() {
     const redeemEth = await contributionRewardInstance.RedeemEther({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemEth.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming ContributionReward ETH for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Eth, true))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Eth, true));
     }));
 
     const redeemGen = await contributionRewardInstance.RedeemExternalToken({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemGen.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming ContributionReward external token for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.ExternalToken, true))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.ExternalToken, true));
     }));
 
     const redeemToken = await contributionRewardInstance.RedeemNativeToken({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemToken.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming ContributionReward native token for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.NativeToken, true))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.NativeToken, true));
     }));
 
     const redeemRep = await contributionRewardInstance.RedeemReputation({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemRep.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming ContributionReward reputation for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Reputation, true))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Reputation, true));
     }));
 
     const redeem = await votingMachineInstance.Redeem({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeem.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming GenesisProtocol GEN for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.GEN, false))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.GEN, false));
     }));
 
     const redeemDaoBounty = await votingMachineInstance.RedeemDaoBounty({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemDaoBounty.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming GenesisProtocol staker bounty GEN for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.BountyGEN, false))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.BountyGEN, false));
     }));
 
     const redeemRepGP = await votingMachineInstance.RedeemReputation({}, {fromBlock: lastCachedBlock, toBlock: latestBlock}).get(undefined, -1);
     await Promise.all(redeemRepGP.map(({args: {_proposalId, _avatar, _beneficiary}}) => {
       console.log(`Redeeming GenesisProtocol reputation for account ${_beneficiary} on proposal ${_proposalId}`);
-      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Reputation, false))
+      store.dispatch(arcActions.onRedeemReward(_avatar, _proposalId, _beneficiary, RewardType.Reputation, false));
     }));
 
     console.log("Done with redemptions, now updating DAOs");

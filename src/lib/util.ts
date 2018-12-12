@@ -23,19 +23,19 @@ export default class Util {
   public static networkName(id: number) {
     switch (id) {
       case 1:
-        return "Mainnet"
+        return "Mainnet";
       case 2:
-        return "Morden"
+        return "Morden";
       case 3:
-        return "Ropsten"
+        return "Ropsten";
       case 4:
-        return "Rinkeby"
+        return "Rinkeby";
       case 42:
-        return "Kovan"
+        return "Kovan";
       case 1512051714758:
-        return "Ganache"
+        return "Ganache";
       default:
-        return "Unknown network"
+        return "Unknown network";
     }
   }
 

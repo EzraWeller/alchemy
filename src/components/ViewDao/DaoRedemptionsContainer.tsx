@@ -39,7 +39,7 @@ const mapStateToProps = (state: IRootState, ownProps: any) => {
       redemption.proposal = state.arc.proposals[redemption.proposalId];
       proposals.push(state.arc.proposals[redemption.proposalId]);
     });
-    proposals.sort((a, b) => closingTime(b).unix() - closingTime(a).unix())
+    proposals.sort((a, b) => closingTime(b).unix() - closingTime(a).unix());
   }
 
   return {

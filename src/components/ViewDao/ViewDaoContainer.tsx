@@ -245,15 +245,15 @@ class ViewDaoContainer extends React.Component<IProps, IState> {
     const { showTour } = this.props;
     this.setState({ showTourIntro: false });
     showTour();
-  };
+  }
 
   public handleClickSkipTour = (e: any) => {
     this.setState({ showTourIntro: false });
-  };
+  }
 
   public handleClickEndTour = (e: any) => {
     this.setState({ showTourOutro: false });
-  };
+  }
 
   public handleJoyrideCallback = (data: any) => {
     const { hideTour } = this.props;
@@ -267,7 +267,7 @@ class ViewDaoContainer extends React.Component<IProps, IState> {
     if (data.action == 'close' || data.type == 'tour:end') {
       hideTour();
     }
-  };
+  }
 
   public render() {
     const { currentAccountAddress, currentAccountProfile, dao, numRedemptions, tourVisible } = this.props;

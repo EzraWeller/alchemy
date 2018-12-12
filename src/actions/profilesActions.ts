@@ -30,7 +30,7 @@ export function getProfilesForAllAccounts() {
         payload: e.toString()
       });
     }
-  }
+  };
 }
 
 export function getProfile(accountAddress: string) {
@@ -60,10 +60,10 @@ export function getProfile(accountAddress: string) {
         payload: e.getMessage()
       });
     }
-  }
+  };
 }
 
-export type UpdateProfileAction = IAsyncAction<'UPDATE_PROFILE', { accountAddress: string }, { description: string, name: string, socialURLs?: any }>
+export type UpdateProfileAction = IAsyncAction<'UPDATE_PROFILE', { accountAddress: string }, { description: string, name: string, socialURLs?: any }>;
 
 export function updateProfile(accountAddress: string, name: string, description: string, timestamp: string, signature: string) {
   return async (dispatch: any, getState: any) => {
@@ -119,5 +119,5 @@ export function verifySocialAccount(accountAddress: string, account: IProfileSta
       meta: { accountAddress },
       payload: profileDbToRedux(account)
     });
-  }
+  };
 }

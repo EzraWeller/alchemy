@@ -94,7 +94,7 @@ export function setCurrentAccount(accountAddress: string, daoAvatarAddress: stri
       ethAccountAddress: accountAddress,
       currentAccountEthBalance: 0,
       currentAccountExternalTokenBalance: 0
-    }
+    };
 
     const getBalance = promisify(web3.eth.getBalance);
     const balance = await getBalance(accountAddress);
@@ -182,7 +182,7 @@ export type ApproveAction = IAsyncAction<ActionTypes.APPROVE_STAKING_GENS, {
   accountAddress: string
 }, {
   numTokensApproved: number
-}>
+}>;
 
 // Approve transfer of 100000 GENs from accountAddress to the GenesisProtocol contract for use in staking
 export function approveStakingGens(daoAvatarAddress: string) {
@@ -207,7 +207,7 @@ export function approveStakingGens(daoAvatarAddress: string) {
       const votingMachineInstance = await Arc.GenesisProtocolFactory.at(votingMachineAddress);
       const stakingTokenAddress = await votingMachineInstance.contract.stakingToken();
       const stakingToken = await Arc.StandardTokenFactory.at(stakingTokenAddress);
-      await stakingToken.approve({spender: votingMachineAddress, amount: Util.toWei(100000)})
+      await stakingToken.approve({spender: votingMachineAddress, amount: Util.toWei(100000)});
     } catch (err) {
       console.error(err);
       dispatch({
@@ -217,9 +217,9 @@ export function approveStakingGens(daoAvatarAddress: string) {
         operation: {
           message: `Approving tokens for staking failed`
         }
-      } as ApproveAction)
+      } as ApproveAction);
     }
-  }
+  };
 }
 
 // GEN transfer approval confirmed
@@ -228,7 +228,7 @@ export function onApprovedStakingGens(numTokensApproved: number) {
     const currentAccountAddress: string = getState().web3.ethAccountAddress;
 
     const meta = { accountAddress: currentAccountAddress };
-    const payload = { numTokensApproved }
+    const payload = { numTokensApproved };
 
     dispatch({
       type: ActionTypes.APPROVE_STAKING_GENS,
@@ -239,5 +239,5 @@ export function onApprovedStakingGens(numTokensApproved: number) {
       meta,
       payload
     } as ApproveAction);
-  }
+  };
 }
