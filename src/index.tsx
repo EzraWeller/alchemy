@@ -1,9 +1,11 @@
+import axios from "axios";
+import BigNumber from "bignumber.js";
 import * as Arc from '@daostack/arc.js';
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { AppContainer } from "react-hot-loader";
-import axios from "axios";
-import BigNumber from "bignumber.js";
 
 import { App } from "./App";
 
@@ -12,6 +14,9 @@ import Util from 'lib/util';
 
 async function renderApp() {
   try {
+    // Add icons we want to use from FontAwesome
+    library.add(faGithub, faTwitter, faFacebook);
+
     Arc.ConfigService.set("estimateGas", true);
     Arc.ConfigService.set("txDepthRequiredForConfirmation", { kovan: 0, live: 0});
 
@@ -53,7 +58,7 @@ async function renderApp() {
 
     Arc.AccountService.subscribeToAccountChanges(() => {
       window.location.reload()
-    })
+    });
   } catch (e) {
     console.error(e);
   }

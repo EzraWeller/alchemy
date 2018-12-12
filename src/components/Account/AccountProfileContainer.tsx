@@ -3,13 +3,11 @@ import promisify = require("es6-promisify");
 import * as ethUtil from 'ethereumjs-util';
 import * as sigUtil from 'eth-sig-util';
 import { Formik, Field, FormikBag } from 'formik';
-import * as OAuth from 'oauthio-web';
 import * as queryString from 'query-string';
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
-import TwitterLogin from 'components/Account/TwitterLogin';
-import GitHubLogin from 'react-github-login';
+import * as io from 'socket.io-client';
 
 import * as profileActions from "actions/profilesActions";
 import { IRootState } from "reducers";
@@ -19,10 +17,13 @@ import { IProfileState } from "reducers/profilesReducer";
 import Util from "lib/util";
 
 import AccountImage from "components/Account/AccountImage";
-import DaoHeader from "components/ViewDao/DaoHeader";
+import OAuthLogin from 'components/Account/OAuthLogin';
 import ReputationView from "components/Account/ReputationView";
+import DaoHeader from "components/ViewDao/DaoHeader";
 
 import * as css from "./Account.scss";
+
+const socket = io(process.env.API_URL);
 
 interface IStateProps extends RouteComponentProps<any> {
   accountAddress: string;
@@ -48,12 +49,14 @@ interface IDispatchProps {
   showNotification: typeof showNotification;
   getProfile: typeof profileActions.getProfile;
   updateProfile: typeof profileActions.updateProfile;
+  verifySocialAccount: typeof profileActions.verifySocialAccount;
 }
 
 const mapDispatchToProps = {
   showNotification,
   getProfile: profileActions.getProfile,
-  updateProfile: profileActions.updateProfile
+  updateProfile: profileActions.updateProfile,
+  verifySocialAccount: profileActions.verifySocialAccount
 };
 
 type IProps = IStateProps & IDispatchProps;
@@ -65,7 +68,6 @@ interface IState {
 
 interface FormValues {
   description: string;
-  githubURL: string;
   name: string;
 }
 
@@ -143,47 +145,8 @@ class AccountProfileContainer extends React.Component<IProps, IState> {
     setSubmitting(false);
   }
 
-  public onSuccess(e: any) : any {
-    console.log("Success ", e);
-    e.preventDefault();
-  }
-
-  public onFailed(e: any) : any {
-    console.log("Failure ", e);
-    e.preventDefault();
-  }
-
-  // Downloads oauth.js from CDN, pretty much like adding external scripts
-  public componentDidMount () {
-    const oauthScript = document.createElement("script");
-    oauthScript.src = "https://cdn.rawgit.com/oauth-io/oauth-js/c5af4519/dist/oauth.js";
-
-    document.body.appendChild(oauthScript);
-  }
-
-  public githubLogin(e: any) : any {
-    console.log("github login ", e);
-    // Prevents page reload
-    e.preventDefault();
-
-    (window as any).OAuth.initialize('o-LrtT4vWMn-8O5yM-wsiMJxukY');
-
-     // Popup Github and ask for authorization
-    (window as any).OAuth.popup('github').then((provider: any) => {
-
-      // Prompts 'welcome' message with User's name on successful login
-      // Check console logs for additional User info
-      provider.me().then((data: any) => {
-        console.log("data: ", data);
-        alert("Welcome " + data.name + "!");
-      });
-
-      // You can also call Github's API using .get()
-      provider.get('/user').then((data: any) => {
-         console.log('self data:', data);
-      });
-
-    });
+  public onOAuthSuccess(account: IProfileState) {
+    this.props.verifySocialAccount(this.props.accountAddress, account);
   }
 
   public render() {
@@ -205,7 +168,6 @@ class AccountProfileContainer extends React.Component<IProps, IState> {
             enableReinitialize={true}
             initialValues={{
               description: accountProfile ? accountProfile.description || "" : "",
-              githubURL: accountProfile ? accountProfile.githubURL || "" : "",
               name: accountProfile ? accountProfile.name || "" : ""
             } as FormValues}
             validate={(values: FormValues) => {
@@ -290,20 +252,20 @@ class AccountProfileContainer extends React.Component<IProps, IState> {
                       <span>{accountAddress.substr(0, 20)}...</span>
                       <button className={css.copyButton} onClick={this.copyAddress}><img src="/assets/images/Icon/Copy-black.svg"/></button>
                     </div>
-                    <TwitterLogin loginUrl="http://localhost:3001/link/twitter/callback/"
-                      onFailure={this.onFailed} onSuccess={this.onSuccess}
-                      requestTokenUrl="http://localhost:3001/link/twitter/"
-                      credentials='include'
-                      customHeaders={{'Accept': 'application/json', 'Cache': 'no-cache'}} />
-                     <GitHubLogin clientId="00643d97ed6ba7208db5"
-                        onSuccess={this.onSuccess}
-                        onFailure={this.onFailed}
-                        redirectUri="http://localhost:3001/link/github/callback" />
-                     <button onClick={this.githubLogin}>Github Login</button>
-                    {/*<div>
-                      <strong>Prove it's you by linking your social accounts:</strong>
-                      <p>Authenticate your identity by linking your social accounts. Once linked, your social accounts will display in your profile page, and server as proof that you are who you say you are.</p>
-                    </div>*/}
+                    {editing
+                      ? <div>
+                          <strong>Prove it's you by linking your social accounts:</strong>
+                          <p>Authenticate your identity by linking your social accounts. Once linked, your social accounts will display in your profile page, and server as proof that you are who you say you are.</p>
+                        </div>
+                      : <div><strong>Social accounts:</strong></div>
+                    }
+                    {!editing && Object.keys(accountProfile.socialURLs).length == 0 ? "None connected" :
+                      <div>
+                        <OAuthLogin editing={editing} provider='facebook' accountAddress={accountAddress} onSuccess={this.onOAuthSuccess.bind(this)} profile={accountProfile} socket={socket} />
+                        <OAuthLogin editing={editing} provider='twitter' accountAddress={accountAddress} onSuccess={this.onOAuthSuccess.bind(this)} profile={accountProfile} socket={socket} />
+                        <OAuthLogin editing={editing} provider='github' accountAddress={accountAddress} onSuccess={this.onOAuthSuccess.bind(this)} profile={accountProfile} socket={socket} />
+                      </div>
+                    }
                   </div>
                 </div>
                 { editing ?
